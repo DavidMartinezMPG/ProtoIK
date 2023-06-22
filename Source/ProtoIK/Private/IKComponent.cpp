@@ -49,7 +49,7 @@ void UIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 		FHitResult OutHit;
 		if (GetWorld()->LineTraceSingleByChannel(OutHit, TraceStartLocation, TraceEndLocation, ECollisionChannel::ECC_Visibility, QueryParams))
 		{
-			SocketsWorldLocation[i] = OutHit.Location;
+			SocketsWorldLocation[i].Z = OutHit.Location.Z;
 
 			DrawDebugSphere(GetWorld(), OutHit.Location, 5.f, 5, FColor::Red, false, 0.1f);
 		}
