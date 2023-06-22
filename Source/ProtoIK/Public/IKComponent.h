@@ -26,12 +26,23 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	void TraceFeet();
+
 	UPROPERTY()
 	TArray<const USkeletalMeshSocket*> Sockets;
 
 	UPROPERTY()
 	USkeletalMeshComponent* MeshComponent;
 
+	UPROPERTY()
+	class UCharacterMovementComponent* MovementComponent;
+
 	UPROPERTY(EditDefaultsOnly)
 	float GroundTraceDistance;
+
+	UPROPERTY(EditDefaultsOnly)
+	float MovementThresholdToTrace;
+
+	FVector LastTraceLocation;
+	FVector LastCurrentLocation;
 };
