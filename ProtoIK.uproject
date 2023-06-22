@@ -7,7 +7,11 @@
 		{
 			"Name": "ProtoIK",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"ControlRig",
+				"Engine"
+			]
 		}
 	],
 	"Plugins": [
