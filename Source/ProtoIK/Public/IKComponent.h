@@ -45,4 +45,5 @@ protected:
 
 	FVector LastTraceLocation;
 	FVector LastCurrentLocation;
+	TArray<FVector> SocketsOffset;
 };

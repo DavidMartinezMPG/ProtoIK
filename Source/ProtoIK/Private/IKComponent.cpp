@@ -22,15 +22,20 @@ void UIKComponent::BeginPlay()
 
 	if (!IsValid(MeshComponent) || !IsValid(MeshComponent)) return;
 
+	const FVector CurrentLocation = MeshComponent->GetComponentLocation();
+
 	for (const FName SocketName : SocketsName)
 	{
 		const USkeletalMeshSocket* Socket = MeshComponent->GetSocketByName(SocketName);
+		const FVector SocketLocation = Socket->GetSocketLocation(MeshComponent);
+		const FVector SocketOffset = SocketLocation - CurrentLocation;
+		SocketsOffset.Add(SocketOffset);
 		Sockets.Add(Socket);
 		SocketsWorldLocation.Add(Socket->GetSocketLocation(MeshComponent));
 	}
 
-	LastTraceLocation = MeshComponent->GetComponentLocation();
-	LastCurrentLocation = MeshComponent->GetComponentLocation();
+	LastTraceLocation = CurrentLocation;
+	LastCurrentLocation = CurrentLocation;
 }
 
 void UIKComponent::TraceFeet()
@@ -58,7 +63,8 @@ void UIKComponent::TraceFeet()
 	{
 		const USkeletalMeshSocket* Socket = Sockets[i];
 		const FVector SocketLocation = Socket->GetSocketLocation(MeshComponent);
-		const FVector SocketToTraceDif = NewTraceLocation - SocketLocation;
+		const FVector SocketNewTraceLocation = NewTraceLocation + SocketsOffset[i];
+		const FVector SocketToTraceDif = SocketNewTraceLocation - SocketLocation;
 		const FVector NewSocketLocation = SocketLocation + SocketToTraceDif;
 		const FVector TraceStartLocation = FVector(NewSocketLocation.X, NewSocketLocation.Y, NewSocketLocation.Z + GroundTraceDistance);
 		const FVector TraceEndLocation = FVector(NewSocketLocation.X, NewSocketLocation.Y, NewSocketLocation.Z - GroundTraceDistance);
