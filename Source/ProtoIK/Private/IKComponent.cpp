@@ -24,7 +24,7 @@ void UIKComponent::BeginPlay()
 
 	const FVector CurrentLocation = MeshComponent->GetComponentLocation();
 
-	HipSocket = MeshComponent->GetSocketByName(HipSocketName);
+	BaseSocket = MeshComponent->GetSocketByName(BaseSocketName);
 
 	for (const FName SocketName : SocketsName)
 	{
@@ -34,12 +34,9 @@ void UIKComponent::BeginPlay()
 		SocketsOffset.Add(SocketOffset);
 		Sockets.Add(Socket);
 		SocketsWorldLocation.Add(SocketLocation);
-		PreviousSocketsWorldLocation.Add(SocketLocation);
-		NextSocketsWorldLocation.Add(SocketLocation);
 	}
 
 	LastTraceLocation = CurrentLocation;
-	LastCurrentLocation = CurrentLocation;
 	CurrentSocketIndex = 0;
 }
 
@@ -85,14 +82,14 @@ void UIKComponent::TraceSockets(const float DeltaTime)
 	DrawDebugSphere(GetWorld(), LastTraceLocation, 5.f, 5, FColor::Blue, false, 0.1f);
 }
 
-void UIKComponent::UpdateSocketLocation(const int32 FootIndex, const FVector CurrentLocation, const FVector NextTraceLocation, const float DeltaTime)
+void UIKComponent::UpdateSocketLocation(const int32 SocketIndex, const FVector CurrentLocation, const FVector NextTraceLocation, const float DeltaTime)
 {
 	if (!IsValid(MeshComponent) || !IsValid(MovementComponent)) return;
 
-	const FVector CurrentSocketLocation = FMath::Lerp(Sockets[CurrentSocketIndex]->GetSocketLocation(MeshComponent), CurrentLocation + SocketsOffset[CurrentSocketIndex], DeltaTime * 10.f);
+	const FVector CurrentSocketLocation = FMath::Lerp(Sockets[SocketIndex]->GetSocketLocation(MeshComponent), CurrentLocation + SocketsOffset[SocketIndex], DeltaTime * 10.f);
 
-	const FVector SocketTraceStartLocation = FVector(CurrentSocketLocation.X, CurrentSocketLocation.Y, CurrentSocketLocation.Z + GroundTraceDistance);
-	const FVector SocketTraceEndLocation = FVector(CurrentSocketLocation.X, CurrentSocketLocation.Y, CurrentSocketLocation.Z - GroundTraceDistance);
+	const FVector SocketTraceStartLocation = FVector(CurrentSocketLocation.X, CurrentSocketLocation.Y, CurrentSocketLocation.Z + TraceDistance);
+	const FVector SocketTraceEndLocation = FVector(CurrentSocketLocation.X, CurrentSocketLocation.Y, CurrentSocketLocation.Z - TraceDistance);
 
 	DrawDebugSphere(GetWorld(), CurrentSocketLocation, 5.f, 5, FColor::Green, false, 0.1f);
 
@@ -102,8 +99,8 @@ void UIKComponent::UpdateSocketLocation(const int32 FootIndex, const FVector Cur
 	FHitResult OutHit;
 	if (GetWorld()->LineTraceSingleByChannel(OutHit, SocketTraceStartLocation, SocketTraceEndLocation, ECollisionChannel::ECC_Visibility, QueryParams))
 	{
-		SocketsWorldLocation[CurrentSocketIndex] = OutHit.Location;
-		SocketsWorldLocation[CurrentSocketIndex].Z += 5.f;
+		SocketsWorldLocation[SocketIndex] = OutHit.Location;
+		SocketsWorldLocation[SocketIndex].Z += 5.f;
 
 		const float MovementDelta = (CurrentLocation - LastTraceLocation).Length();
 
@@ -112,13 +109,13 @@ void UIKComponent::UpdateSocketLocation(const int32 FootIndex, const FVector Cur
 			const float MovementDeltaRemaining = (NextTraceLocation - CurrentLocation).Length();
 			const float MovementPercentage = FMath::Clamp((MovementThresholdToTrace - MovementDeltaRemaining) / MovementThresholdToTrace, 0.f, 1.f);
 
-			HipSocketHeight = HipBobCurve->GetFloatValue(MovementPercentage) * MaxHipBobHeight;
+			BaseSocketHeight = BaseSocketBobCurve->GetFloatValue(MovementPercentage) * MaxBaseSocketBobHeight;
 
-			const float Height = WalkHeightCurve->GetFloatValue(MovementPercentage) * MaxSocketHeight;
-			SocketsWorldLocation[CurrentSocketIndex].Z += Height;
+			const float Height = SocketHeightCurve->GetFloatValue(MovementPercentage) * MaxSocketHeight;
+			SocketsWorldLocation[SocketIndex].Z += Height;
 		}
 
-		DrawDebugSphere(GetWorld(), SocketsWorldLocation[CurrentSocketIndex], 5.f, 5, FColor::Red, false, 0.1f);
+		DrawDebugSphere(GetWorld(), SocketsWorldLocation[SocketIndex], 5.f, 5, FColor::Red, false, 0.1f);
 	}
 }
 

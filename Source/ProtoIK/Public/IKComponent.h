@@ -24,13 +24,16 @@ public:
 	TArray<FVector> SocketsWorldLocation;
 
 	UPROPERTY(BlueprintReadOnly)
-	float HipSocketHeight;
+	float BaseSocketHeight;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName BaseSocketName;
 
 protected:
 	virtual void BeginPlay() override;
 
 	void TraceSockets(const float DeltaTime);
-	void UpdateSocketLocation(const int32 FootIndex, const FVector CurrentLocation, const FVector NextTraceLocation, const float DeltaTime);
+	void UpdateSocketLocation(const int32 SocketIndex, const FVector CurrentLocation, const FVector NextTraceLocation, const float DeltaTime);
 	void UpdateAllSocketsLocation(const FVector CurrentLocation, const FVector NextTraceLocation, const float DeltaTime);
 
 	UPROPERTY()
@@ -43,33 +46,27 @@ protected:
 	class UCharacterMovementComponent* MovementComponent;
 
 	UPROPERTY(EditDefaultsOnly)
-	float GroundTraceDistance;
+	float TraceDistance;
 
 	UPROPERTY(EditDefaultsOnly)
 	float MovementThresholdToTrace;
 
 	UPROPERTY(EditDefaultsOnly)
-	UCurveFloat* WalkHeightCurve;
+	UCurveFloat* SocketHeightCurve;
 
 	UPROPERTY(EditDefaultsOnly)
-	UCurveFloat* HipBobCurve;
+	UCurveFloat* BaseSocketBobCurve;
 
 	UPROPERTY(EditDefaultsOnly)
 	float MaxSocketHeight;
 
 	UPROPERTY(EditDefaultsOnly)
-	float MaxHipBobHeight;
-
-	UPROPERTY(EditDefaultsOnly)
-	FName HipSocketName;
+	float MaxBaseSocketBobHeight;
 
 	UPROPERTY()
-	const USkeletalMeshSocket* HipSocket;
+	const USkeletalMeshSocket* BaseSocket;
 
-	TArray<FVector> PreviousSocketsWorldLocation;
-	TArray<FVector> NextSocketsWorldLocation;
 	FVector LastTraceLocation;
-	FVector LastCurrentLocation;
 	TArray<FVector> SocketsOffset;
 	int32 CurrentSocketIndex;
 };
