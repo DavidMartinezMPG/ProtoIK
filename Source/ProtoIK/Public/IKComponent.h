@@ -23,10 +23,15 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FVector> SocketsWorldLocation;
 
+	UPROPERTY(BlueprintReadOnly)
+	float HipSocketHeight;
+
 protected:
 	virtual void BeginPlay() override;
 
-	void TraceFeet();
+	void TraceSockets(const float DeltaTime);
+	void UpdateSocketLocation(const int32 FootIndex, const FVector CurrentLocation, const FVector NextTraceLocation, const float DeltaTime);
+	void UpdateAllSocketsLocation(const FVector CurrentLocation, const FVector NextTraceLocation, const float DeltaTime);
 
 	UPROPERTY()
 	TArray<const USkeletalMeshSocket*> Sockets;
@@ -43,7 +48,28 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	float MovementThresholdToTrace;
 
+	UPROPERTY(EditDefaultsOnly)
+	UCurveFloat* WalkHeightCurve;
+
+	UPROPERTY(EditDefaultsOnly)
+	UCurveFloat* HipBobCurve;
+
+	UPROPERTY(EditDefaultsOnly)
+	float MaxSocketHeight;
+
+	UPROPERTY(EditDefaultsOnly)
+	float MaxHipBobHeight;
+
+	UPROPERTY(EditDefaultsOnly)
+	FName HipSocketName;
+
+	UPROPERTY()
+	const USkeletalMeshSocket* HipSocket;
+
+	TArray<FVector> PreviousSocketsWorldLocation;
+	TArray<FVector> NextSocketsWorldLocation;
 	FVector LastTraceLocation;
 	FVector LastCurrentLocation;
 	TArray<FVector> SocketsOffset;
+	int32 CurrentSocketIndex;
 };
