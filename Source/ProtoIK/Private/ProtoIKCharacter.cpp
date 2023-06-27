@@ -4,6 +4,7 @@
 #include "ProtoIKCharacter.h"
 
 #include "IKComponent.h"
+#include "InteractionComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -12,6 +13,7 @@ AProtoIKCharacter::AProtoIKCharacter()
 	PrimaryActorTick.bCanEverTick = false;
 
 	IKComponent = CreateDefaultSubobject<UIKComponent>(TEXT("IK Component"));
+	InteractionComponent = CreateDefaultSubobject<UInteractionComponent>(TEXT("Interaction Component"));
 }
 
 void AProtoIKCharacter::BeginPlay()
