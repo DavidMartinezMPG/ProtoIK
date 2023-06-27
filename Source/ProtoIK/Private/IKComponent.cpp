@@ -9,6 +9,9 @@
 UIKComponent::UIKComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+
+	CurrentSocketIndex = 0;
+	NumberOfSocketsAlternating = 1;
 }
 
 void UIKComponent::BeginPlay()
@@ -37,7 +40,7 @@ void UIKComponent::BeginPlay()
 	}
 
 	LastTraceLocation = CurrentLocation;
-	CurrentSocketIndex = 0;
+	NumberOfSocketsAlternating = FMath::Min(NumberOfSocketsAlternating, Sockets.Num());
 }
 
 void UIKComponent::TraceSockets(const float DeltaTime)
@@ -57,17 +60,27 @@ void UIKComponent::TraceSockets(const float DeltaTime)
 	}
 	else
 	{
-		UpdateSocketLocation(CurrentSocketIndex, CurrentLocation, NextTraceLocation, DeltaTime);
-
 		const float MovementDelta = (CurrentLocation - LastTraceLocation).Length();
+		int32 TempSocketIndex = CurrentSocketIndex;
+
+		for (int32 i = 0; i < NumberOfSocketsAlternating; ++i)
+		{
+			UpdateSocketLocation(TempSocketIndex, CurrentLocation, NextTraceLocation, DeltaTime);
+
+			TempSocketIndex += 1;
+			if (TempSocketIndex >= Sockets.Num())
+			{
+				TempSocketIndex = 0;
+			}
+		}
 
 		if (MovementDelta < MovementThresholdToTrace) return;
 	}
 
-	CurrentSocketIndex += 1;
+	CurrentSocketIndex += NumberOfSocketsAlternating;
 	if (CurrentSocketIndex >= Sockets.Num())
 	{
-		CurrentSocketIndex = 0;
+		CurrentSocketIndex -= Sockets.Num();
 	}
 
 	LastTraceLocation = NextTraceLocation;	

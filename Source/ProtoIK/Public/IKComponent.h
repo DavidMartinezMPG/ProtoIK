@@ -29,6 +29,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName BaseSocketName;
 
+	UPROPERTY(EditDefaultsOnly)
+	int32 NumberOfSocketsAlternating;
+
 protected:
 	virtual void BeginPlay() override;
 
