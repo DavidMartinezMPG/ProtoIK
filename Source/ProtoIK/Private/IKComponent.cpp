@@ -39,6 +39,7 @@ void UIKComponent::BeginPlay()
 		SocketsWorldLocation.Add(SocketLocation);
 	}
 
+	InitialRotation = MeshComponent->GetComponentRotation();
 	LastTraceLocation = CurrentLocation;
 	NumberOfSocketsAlternating = FMath::Min(NumberOfSocketsAlternating, Sockets.Num());
 }
@@ -99,7 +100,11 @@ void UIKComponent::UpdateSocketLocation(const int32 SocketIndex, const FVector C
 {
 	if (!IsValid(MeshComponent) || !IsValid(MovementComponent)) return;
 
-	const FVector CurrentSocketLocation = FMath::Lerp(Sockets[SocketIndex]->GetSocketLocation(MeshComponent), CurrentLocation + SocketsOffset[SocketIndex], DeltaTime * 10.f);
+	FRotator CurrentRotation = MeshComponent->GetComponentRotation();
+	FRotator RotationDelta = CurrentRotation - InitialRotation;
+	const FVector SocketOffset = SocketsOffset[SocketIndex].RotateAngleAxis(RotationDelta.Yaw, FVector::ZAxisVector);
+
+	const FVector CurrentSocketLocation = FMath::Lerp(Sockets[SocketIndex]->GetSocketLocation(MeshComponent), CurrentLocation + SocketOffset, DeltaTime * 10.f);
 
 	const FVector SocketTraceStartLocation = FVector(CurrentSocketLocation.X, CurrentSocketLocation.Y, CurrentSocketLocation.Z + TraceDistance);
 	const FVector SocketTraceEndLocation = FVector(CurrentSocketLocation.X, CurrentSocketLocation.Y, CurrentSocketLocation.Z - TraceDistance);

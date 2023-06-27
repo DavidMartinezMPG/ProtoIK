@@ -72,4 +72,5 @@ protected:
 	FVector LastTraceLocation;
 	TArray<FVector> SocketsOffset;
 	int32 CurrentSocketIndex;
+	FRotator InitialRotation;
 };

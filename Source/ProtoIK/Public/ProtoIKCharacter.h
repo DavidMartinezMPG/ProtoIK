@@ -19,12 +19,15 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 private:
-	UPROPERTY(EditAnywhere)
-	class UIKComponent* IKComponent;
-
 	UFUNCTION()
 	void MoveForward(float Value);
 
 	UFUNCTION()
 	void MoveRight(float Value);
+
+	UPROPERTY(EditAnywhere)
+	class UIKComponent* IKComponent;
+
+	UPROPERTY()
+	APlayerCameraManager* CameraManager;
 };

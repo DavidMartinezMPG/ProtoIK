@@ -4,6 +4,8 @@
 #include "ProtoIKCharacter.h"
 
 #include "IKComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AProtoIKCharacter::AProtoIKCharacter()
 {
@@ -15,6 +17,8 @@ AProtoIKCharacter::AProtoIKCharacter()
 void AProtoIKCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 }
 
 void AProtoIKCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -27,11 +31,11 @@ void AProtoIKCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void AProtoIKCharacter::MoveForward(float Value)
 {
-	AddMovementInput(FVector::ForwardVector, Value);
+	AddMovementInput(UKismetMathLibrary::GetForwardVector(CameraManager->GetCameraRotation()), Value);
 }
 
 void AProtoIKCharacter::MoveRight(float Value)
 {
-	AddMovementInput(FVector::RightVector, Value);
+	AddMovementInput(UKismetMathLibrary::GetRightVector(CameraManager->GetCameraRotation()), Value);
 }
 
