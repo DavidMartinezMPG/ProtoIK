@@ -9,6 +9,8 @@
 
 class UInteractionComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteract, UInteractionComponent*, InstigatorComponent);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROTOIK_API UInteractableComponent : public UActorComponent
 {
@@ -23,13 +25,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool CanInteract(const UInteractionComponent* InstigatorComponent) const;
 
-	UPROPERTY(BlueprintReadOnly)
-	TArray<FGameplayTag> GrantedTags;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTagContainer GrantedTags;
 
-	UPROPERTY(BlueprintReadOnly)
-	TArray<FGameplayTag> RemovedTags;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTagContainer RemovedTags;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnInteract OnInteract;
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TArray<FGameplayTag> RequiredTags;
+	FGameplayTagContainer RequiredTags;
 };

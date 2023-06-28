@@ -25,6 +25,9 @@ private:
 	UFUNCTION()
 	void MoveRight(float Value);
 
+	UFUNCTION()
+	void Interact();
+
 	UPROPERTY(EditAnywhere)
 	class UIKComponent* IKComponent;
 

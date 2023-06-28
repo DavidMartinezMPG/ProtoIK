@@ -16,6 +16,8 @@ void UInteractableComponent::Interact(UInteractionComponent* InstigatorComponent
 
 	InstigatorComponent->GrantTags(GrantedTags);
 	InstigatorComponent->RemoveTags(RemovedTags);
+
+	OnInteract.Broadcast(InstigatorComponent);
 }
 
 bool UInteractableComponent::CanInteract(const UInteractionComponent* InstigatorComponent) const

@@ -29,6 +29,8 @@ void AProtoIKCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAxis(FName("MoveForward"), this, &AProtoIKCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(FName("MoveRight"), this, &AProtoIKCharacter::MoveRight);
+
+	PlayerInputComponent->BindAction(FName("Interact"), EInputEvent::IE_Pressed, this, &AProtoIKCharacter::Interact);
 }
 
 void AProtoIKCharacter::MoveForward(float Value)
@@ -41,3 +43,7 @@ void AProtoIKCharacter::MoveRight(float Value)
 	AddMovementInput(UKismetMathLibrary::GetRightVector(CameraManager->GetCameraRotation()), Value);
 }
 
+void AProtoIKCharacter::Interact()
+{
+	InteractionComponent->TryInteract();
+}

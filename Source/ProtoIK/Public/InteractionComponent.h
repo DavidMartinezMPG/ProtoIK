@@ -7,6 +7,8 @@
 #include "Components/ActorComponent.h"
 #include "InteractionComponent.generated.h"
 
+class UInteractableComponent;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROTOIK_API UInteractionComponent : public UActorComponent
 {
@@ -15,16 +17,38 @@ class PROTOIK_API UInteractionComponent : public UActorComponent
 public:	
 	UInteractionComponent();
 
-	UFUNCTION(BlueprintCallable)
-	bool HasTags(const TArray<FGameplayTag> Tags) const;
+	bool TryInteract();
 
 	UFUNCTION(BlueprintCallable)
-	void GrantTags(const TArray<FGameplayTag> Tags);
+	bool HasTags(const FGameplayTagContainer Tags) const;
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveTags(const TArray<FGameplayTag> Tags);
+	void GrantTags(const FGameplayTagContainer Tags);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveTags(const FGameplayTagContainer Tags);
+
+protected:
+	virtual void BeginPlay() override;
 
 private:
+	UFUNCTION()
+	void ComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void ComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	void ChooseTargetInteractable();
+
 	UPROPERTY(EditDefaultsOnly)
-	TArray<FGameplayTag> OwnedTags;
+	FGameplayTagContainer OwnedTags;
+
+	UPROPERTY(EditAnywhere)
+	class UCapsuleComponent* CapsuleComponent;
+
+	UPROPERTY()
+	TArray<UInteractableComponent*> InteractablesInRange;
+
+	UPROPERTY()
+	UInteractableComponent* TargetInteractable;
 };
