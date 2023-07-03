@@ -9,7 +9,25 @@
 
 class UInteractionComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteract, UInteractionComponent*, InstigatorComponent);
+USTRUCT(BlueprintType)
+struct PROTOIK_API FInteractionTags
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly)
+	FString Description;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTagContainer GrantedTags;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTagContainer RemovedTags;
+
+	UPROPERTY(EditDefaultsOnly)
+	FGameplayTagContainer RequiredTags;
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteract, UInteractionComponent*, InstigatorComponent, FInteractionTags, InteractionTags);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROTOIK_API UInteractableComponent : public UActorComponent
@@ -20,21 +38,14 @@ public:
 	UInteractableComponent();
 
 	UFUNCTION(BlueprintCallable)
-	void Interact(UInteractionComponent* InstigatorComponent);
-
-	UFUNCTION(BlueprintCallable)
-	bool CanInteract(const UInteractionComponent* InstigatorComponent) const;
+	bool Interact(UInteractionComponent* InstigatorComponent);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FGameplayTagContainer GrantedTags;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FGameplayTagContainer RemovedTags;
+	TArray<FInteractionTags> InteractionTagsOptions;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnInteract OnInteract;
 
 private:
-	UPROPERTY(EditDefaultsOnly)
-	FGameplayTagContainer RequiredTags;
+	bool CanInteract(const UInteractionComponent* InstigatorComponent, FInteractionTags& OutInteractionTags) const;
 };

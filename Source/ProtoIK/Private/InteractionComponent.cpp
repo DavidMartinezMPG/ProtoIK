@@ -18,11 +18,9 @@ UInteractionComponent::UInteractionComponent()
 
 bool UInteractionComponent::TryInteract()
 {
-	if (!TargetInteractable || !TargetInteractable->CanInteract(this)) return false;
+	if (!TargetInteractable) return false;
 
-	TargetInteractable->Interact(this);
-
-	return true;
+	return TargetInteractable->Interact(this);
 }
 
 bool UInteractionComponent::HasTags(const FGameplayTagContainer Tags) const
@@ -44,7 +42,7 @@ void UInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CapsuleComponent->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepWorldTransform);
+	CapsuleComponent->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 void UInteractionComponent::ComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

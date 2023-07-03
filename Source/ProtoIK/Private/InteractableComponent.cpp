@@ -10,19 +10,33 @@ UInteractableComponent::UInteractableComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UInteractableComponent::Interact(UInteractionComponent* InstigatorComponent)
+bool UInteractableComponent::Interact(UInteractionComponent* InstigatorComponent)
 {
-	if (!InstigatorComponent) return;
+	FInteractionTags InteractionTags;
 
-	InstigatorComponent->GrantTags(GrantedTags);
-	InstigatorComponent->RemoveTags(RemovedTags);
+	if (!InstigatorComponent || !CanInteract(InstigatorComponent, InteractionTags)) return false;
 
-	OnInteract.Broadcast(InstigatorComponent);
+	InstigatorComponent->GrantTags(InteractionTags.GrantedTags);
+	InstigatorComponent->RemoveTags(InteractionTags.RemovedTags);
+
+	OnInteract.Broadcast(InstigatorComponent, InteractionTags);
+
+	return true;
 }
 
-bool UInteractableComponent::CanInteract(const UInteractionComponent* InstigatorComponent) const
+bool UInteractableComponent::CanInteract(const UInteractionComponent* InstigatorComponent, FInteractionTags& OutInteractionTags) const
 {
 	if (!InstigatorComponent) return false;
 
-	return InstigatorComponent->HasTags(RequiredTags);
+	for (const FInteractionTags Tags : InteractionTagsOptions)
+	{
+		if (InstigatorComponent->HasTags(Tags.RequiredTags))
+		{
+			OutInteractionTags = Tags;
+
+			return true;
+		}
+	}
+
+	return false;
 }
