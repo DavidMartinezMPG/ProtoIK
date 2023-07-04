@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "IKComponent.h"
+#include "IKMovementComponent.h"
 
 #include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-UIKComponent::UIKComponent()
+UIKMovementComponent::UIKMovementComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 
@@ -14,7 +14,7 @@ UIKComponent::UIKComponent()
 	NumberOfSocketsAlternating = 1;
 }
 
-void UIKComponent::BeginPlay()
+void UIKMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -44,7 +44,7 @@ void UIKComponent::BeginPlay()
 	NumberOfSocketsAlternating = FMath::Min(NumberOfSocketsAlternating, Sockets.Num());
 }
 
-void UIKComponent::TraceSockets(const float DeltaTime)
+void UIKMovementComponent::TraceSockets(const float DeltaTime)
 {
 	if (!IsValid(MeshComponent) || !IsValid(MovementComponent)) return;
 
@@ -96,7 +96,7 @@ void UIKComponent::TraceSockets(const float DeltaTime)
 	DrawDebugSphere(GetWorld(), LastTraceLocation, 5.f, 5, FColor::Blue, false, 0.1f);
 }
 
-void UIKComponent::UpdateSocketLocation(const int32 SocketIndex, const FVector CurrentLocation, const FVector NextTraceLocation, const float DeltaTime)
+void UIKMovementComponent::UpdateSocketLocation(const int32 SocketIndex, const FVector CurrentLocation, const FVector NextTraceLocation, const float DeltaTime)
 {
 	if (!IsValid(MeshComponent) || !IsValid(MovementComponent)) return;
 
@@ -137,7 +137,7 @@ void UIKComponent::UpdateSocketLocation(const int32 SocketIndex, const FVector C
 	}
 }
 
-void UIKComponent::UpdateAllSocketsLocation(const FVector CurrentLocation, const FVector NextTraceLocation,	const float DeltaTime)
+void UIKMovementComponent::UpdateAllSocketsLocation(const FVector CurrentLocation, const FVector NextTraceLocation,	const float DeltaTime)
 {
 	for (int32 i = 0; i < Sockets.Num(); ++i)
 	{
@@ -145,7 +145,7 @@ void UIKComponent::UpdateAllSocketsLocation(const FVector CurrentLocation, const
 	}
 }
 
-void UIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UIKMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 

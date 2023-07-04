@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "IKComponent.generated.h"
+#include "IKMovementComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class PROTOIK_API UIKComponent : public UActorComponent
+class PROTOIK_API UIKMovementComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
-	UIKComponent();
+	UIKMovementComponent();
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 

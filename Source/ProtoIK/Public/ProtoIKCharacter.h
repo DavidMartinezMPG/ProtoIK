@@ -29,7 +29,7 @@ private:
 	void Interact();
 
 	UPROPERTY(EditAnywhere)
-	class UIKComponent* IKComponent;
+	class UIKMovementComponent* IKMovementComponent;
 
 	UPROPERTY(EditAnywhere)
 	class UInteractionComponent* InteractionComponent;
