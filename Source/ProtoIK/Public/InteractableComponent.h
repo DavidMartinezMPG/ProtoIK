@@ -48,4 +48,6 @@ public:
 
 private:
 	bool CanInteract(const UInteractionComponent* InstigatorComponent, FInteractionTags& OutInteractionTags) const;
+
+	bool bInteractable;
 };

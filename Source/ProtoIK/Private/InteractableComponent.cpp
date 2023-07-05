@@ -8,6 +8,8 @@
 UInteractableComponent::UInteractableComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+
+	bInteractable = true;
 }
 
 bool UInteractableComponent::Interact(UInteractionComponent* InstigatorComponent)
@@ -19,6 +21,8 @@ bool UInteractableComponent::Interact(UInteractionComponent* InstigatorComponent
 	InstigatorComponent->GrantTags(InteractionTags.GrantedTags);
 	InstigatorComponent->RemoveTags(InteractionTags.RemovedTags);
 
+	bInteractable = false;
+
 	OnInteract.Broadcast(InstigatorComponent, InteractionTags);
 
 	return true;
@@ -26,7 +30,7 @@ bool UInteractableComponent::Interact(UInteractionComponent* InstigatorComponent
 
 bool UInteractableComponent::CanInteract(const UInteractionComponent* InstigatorComponent, FInteractionTags& OutInteractionTags) const
 {
-	if (!InstigatorComponent) return false;
+	if (!InstigatorComponent || !bInteractable) return false;
 
 	for (const FInteractionTags Tags : InteractionTagsOptions)
 	{

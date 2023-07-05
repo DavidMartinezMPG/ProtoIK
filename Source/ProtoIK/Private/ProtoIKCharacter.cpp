@@ -3,6 +3,7 @@
 
 #include "ProtoIKCharacter.h"
 
+#include "IKInteractionComponent.h"
 #include "IKMovementComponent.h"
 #include "InteractionComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -14,6 +15,7 @@ AProtoIKCharacter::AProtoIKCharacter()
 
 	IKMovementComponent = CreateDefaultSubobject<UIKMovementComponent>(TEXT("IK Movement Component"));
 	InteractionComponent = CreateDefaultSubobject<UInteractionComponent>(TEXT("Interaction Component"));
+	IKInteractionComponent = CreateDefaultSubobject<UIKInteractionComponent>(TEXT("IK Interaction Component"));
 }
 
 void AProtoIKCharacter::BeginPlay()
@@ -35,11 +37,15 @@ void AProtoIKCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void AProtoIKCharacter::MoveForward(float Value)
 {
+	if (IKInteractionComponent->MovingUpperSocket || IKInteractionComponent->MovingLowerSocket) return;
+
 	AddMovementInput(UKismetMathLibrary::GetForwardVector(CameraManager->GetCameraRotation()), Value);
 }
 
 void AProtoIKCharacter::MoveRight(float Value)
 {
+	if (IKInteractionComponent->MovingUpperSocket || IKInteractionComponent->MovingLowerSocket) return;
+
 	AddMovementInput(UKismetMathLibrary::GetRightVector(CameraManager->GetCameraRotation()), Value);
 }
 

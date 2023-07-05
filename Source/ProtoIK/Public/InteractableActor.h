@@ -14,13 +14,13 @@ class PROTOIK_API AInteractableActor : public AActor
 public:	
 	AInteractableActor();
 
-private:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* MeshComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UInteractableComponent* InteractableComponent;
+
+private:
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* BoxComponent;
-
-	UPROPERTY(EditAnywhere)
-	class UInteractableComponent* InteractableComponent;
 };

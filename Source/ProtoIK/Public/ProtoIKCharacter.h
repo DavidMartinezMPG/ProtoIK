@@ -34,6 +34,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	class UInteractionComponent* InteractionComponent;
 
+	UPROPERTY(EditAnywhere)
+	class UIKInteractionComponent* IKInteractionComponent;
+
 	UPROPERTY()
 	APlayerCameraManager* CameraManager;
 };
